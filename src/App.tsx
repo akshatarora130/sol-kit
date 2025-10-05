@@ -62,33 +62,33 @@ const WalletControls = () => {
     <>
       {/* Balance Display */}
       {wallet.connected && (
-        <div className="bg-gradient-to-r from-[#19376D]/95 to-[#0B2447]/95 backdrop-blur-xl rounded-2xl p-4 border border-[#576CBC]/40 shadow-2xl transition-all duration-300 hover:scale-105 hover:shadow-3xl hover:border-[#A5D7E8]/50">
+        <div className="bg-gray-50 rounded-2xl p-4 border border-gray-200 shadow-lg transition-all duration-300 hover:scale-105 hover:shadow-xl hover:border-gray-300">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-3">
-              <div className="p-2 rounded-xl bg-gradient-to-r from-[#576CBC]/20 to-[#A5D7E8]/20">
-                <FaDollarSign className="w-5 h-5 text-[#A5D7E8]" />
+              <div className="p-2 rounded-xl bg-gray-600">
+                <FaDollarSign className="w-5 h-5 text-white" />
               </div>
               <div>
-                <div className="text-[#A5D7E8] text-sm font-medium">
+                <div className="text-gray-700 text-sm font-medium">
                   Wallet Balance
                 </div>
               </div>
             </div>
             <div className="flex items-center gap-3">
               <div className="text-right">
-                <div className="text-2xl font-bold text-white">
+                <div className="text-2xl font-bold text-gray-800">
                   {balance.toFixed(4)}
                 </div>
-                <div className="text-[#A5D7E8]/70 text-sm font-medium">SOL</div>
+                <div className="text-gray-600 text-sm font-medium">SOL</div>
               </div>
               <button
                 onClick={handleRefresh}
                 disabled={isRefreshing}
-                className="p-2.5 rounded-xl bg-gradient-to-r from-[#576CBC]/30 to-[#A5D7E8]/30 hover:from-[#576CBC]/50 hover:to-[#A5D7E8]/50 transition-all duration-300 group disabled:opacity-50 disabled:cursor-not-allowed"
+                className="p-2.5 rounded-xl bg-gray-600 hover:bg-gray-700 transition-all duration-300 group disabled:opacity-50 disabled:cursor-not-allowed"
                 title="Refresh Balance"
               >
                 <FaSync
-                  className={`w-4 h-4 text-[#A5D7E8] group-hover:text-white transition-colors ${
+                  className={`w-4 h-4 text-white group-hover:text-gray-200 transition-colors ${
                     isRefreshing ? "animate-spin" : ""
                   }`}
                 />

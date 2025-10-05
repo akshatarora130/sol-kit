@@ -19,10 +19,10 @@ import {
   FaSpinner,
   FaCheckCircle,
   FaExclamationTriangle,
-  FaWallet,
   FaTag,
   FaHashtag,
   FaCog,
+  FaImage,
 } from "react-icons/fa";
 
 const CreateToken = () => {
@@ -30,6 +30,7 @@ const CreateToken = () => {
   const wallet = useWallet();
   const [tokenName, setTokenName] = useState("");
   const [tokenSymbol, setTokenSymbol] = useState("");
+  const [tokenImageUrl, setTokenImageUrl] = useState("");
   const [tokenDecimals, setTokenDecimals] = useState(9);
   const [tokenSupply, setTokenSupply] = useState(0);
   const [isLoading, setIsLoading] = useState(false);
@@ -70,7 +71,9 @@ const CreateToken = () => {
         mint: mintKeypair.publicKey,
         name: tokenName,
         symbol: tokenSymbol,
-        uri: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSg600Xa4ws6jp54kMDNGYF232lIhY51QJqEA&s",
+        uri:
+          tokenImageUrl ||
+          "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSg600Xa4ws6jp54kMDNGYF232lIhY51QJqEA&s",
         additionalMetadata: [],
       };
 
@@ -86,14 +89,14 @@ const CreateToken = () => {
         SystemProgram.createAccount({
           fromPubkey: wallet.publicKey,
           newAccountPubkey: mintKeypair.publicKey,
-          lamports,
           space: mintLen,
+          lamports,
           programId: TOKEN_2022_PROGRAM_ID,
         }),
         createInitializeMetadataPointerInstruction(
           mintKeypair.publicKey,
           wallet.publicKey,
-          null,
+          mintKeypair.publicKey,
           TOKEN_2022_PROGRAM_ID
         ),
         createInitializeMintInstruction(
@@ -105,13 +108,13 @@ const CreateToken = () => {
         ),
         createInitializeInstruction({
           programId: TOKEN_2022_PROGRAM_ID,
-          metadata: mintKeypair.publicKey,
-          updateAuthority: wallet.publicKey,
           mint: mintKeypair.publicKey,
-          mintAuthority: wallet.publicKey,
+          metadata: mintKeypair.publicKey,
           name: tokenName,
           symbol: tokenSymbol,
           uri: metadata.uri,
+          mintAuthority: wallet.publicKey,
+          updateAuthority: wallet.publicKey,
         })
       );
 
@@ -166,28 +169,25 @@ const CreateToken = () => {
       setIsLoading(false);
       setTokenName("");
       setTokenSymbol("");
+      setTokenImageUrl("");
       setTokenDecimals(9);
       setTokenSupply(0);
     }
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-[#0B2447] via-[#19376D] to-[#0B2447] flex items-center justify-center p-4">
+    <div className="min-h-screen bg-white flex items-center justify-center p-4">
       <div className="w-full max-w-2xl">
-        <div className="bg-gradient-to-br from-[#19376D]/90 to-[#0B2447]/90 backdrop-blur-2xl rounded-3xl shadow-2xl border border-[#576CBC]/40 p-8 relative overflow-hidden">
-          {/* Animated background elements */}
-          <div className="absolute top-0 right-0 w-32 h-32 bg-gradient-to-br from-[#A5D7E8]/10 to-[#576CBC]/10 rounded-full blur-3xl"></div>
-          <div className="absolute bottom-0 left-0 w-24 h-24 bg-gradient-to-tr from-[#576CBC]/10 to-[#A5D7E8]/10 rounded-full blur-2xl"></div>
-
+        <div className="bg-gray-50 rounded-3xl shadow-lg border border-gray-200 p-8 relative overflow-hidden">
           {/* Header */}
           <div className="text-center mb-4 relative z-10">
-            <div className="w-16 h-16 bg-gradient-to-r from-[#576CBC] to-[#A5D7E8] rounded-full mx-auto mb-4 flex items-center justify-center shadow-xl ring-2 ring-[#576CBC]/20">
+            <div className="w-16 h-16 bg-gray-600 rounded-full mx-auto mb-4 flex items-center justify-center shadow-lg">
               <FaCoins className="w-8 h-8 text-white" />
             </div>
-            <h1 className="text-3xl font-bold bg-gradient-to-r from-[#A5D7E8] to-[#576CBC] bg-clip-text text-transparent mb-2">
+            <h1 className="text-3xl font-bold text-gray-800 mb-2">
               Create Token
             </h1>
-            <p className="text-[#A5D7E8]/80 text-sm font-medium">
+            <p className="text-gray-600 text-sm font-medium">
               Create custom SPL tokens on Solana
             </p>
           </div>
@@ -197,19 +197,19 @@ const CreateToken = () => {
             <div className="grid grid-cols-2 gap-4">
               {/* Token Name Input */}
               <div>
-                <label className="block text-sm font-bold text-[#A5D7E8] mb-2">
+                <label className="block text-sm font-bold text-gray-700 mb-2">
                   Token Name
                 </label>
                 <div className="relative">
                   <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                    <FaTag className="w-4 h-4 text-[#A5D7E8]/60" />
+                    <FaTag className="w-4 h-4 text-gray-500" />
                   </div>
                   <input
                     type="text"
                     placeholder="Enter name..."
                     value={tokenName}
                     onChange={(e) => setTokenName(e.target.value)}
-                    className="w-full pl-10 pr-4 py-3 bg-gradient-to-r from-[#19376D]/60 to-[#0B2447]/60 text-[#A5D7E8] placeholder-[#A5D7E8]/50 rounded-xl border-2 border-[#576CBC]/40 focus:border-[#A5D7E8]/60 focus:outline-none transition-all duration-300 shadow-lg"
+                    className="w-full pl-10 pr-4 py-3 bg-white text-gray-800 placeholder-gray-400 rounded-xl border-2 border-gray-300 focus:border-gray-500 focus:outline-none transition-all duration-300 shadow-sm"
                     disabled={isLoading}
                   />
                 </div>
@@ -217,22 +217,42 @@ const CreateToken = () => {
 
               {/* Token Symbol Input */}
               <div>
-                <label className="block text-sm font-bold text-[#A5D7E8] mb-2">
+                <label className="block text-sm font-bold text-gray-700 mb-2">
                   Token Symbol
                 </label>
                 <div className="relative">
                   <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                    <FaHashtag className="w-4 h-4 text-[#A5D7E8]/60" />
+                    <FaHashtag className="w-4 h-4 text-gray-500" />
                   </div>
                   <input
                     type="text"
                     placeholder="Enter symbol..."
                     value={tokenSymbol}
                     onChange={(e) => setTokenSymbol(e.target.value)}
-                    className="w-full pl-10 pr-4 py-3 bg-gradient-to-r from-[#19376D]/60 to-[#0B2447]/60 text-[#A5D7E8] placeholder-[#A5D7E8]/50 rounded-xl border-2 border-[#576CBC]/40 focus:border-[#A5D7E8]/60 focus:outline-none transition-all duration-300 shadow-lg"
+                    className="w-full pl-10 pr-4 py-3 bg-white text-gray-800 placeholder-gray-400 rounded-xl border-2 border-gray-300 focus:border-gray-500 focus:outline-none transition-all duration-300 shadow-sm"
                     disabled={isLoading}
                   />
                 </div>
+              </div>
+            </div>
+
+            {/* Image URL Input */}
+            <div>
+              <label className="block text-sm font-bold text-gray-700 mb-2">
+                Token Image URL
+              </label>
+              <div className="relative">
+                <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                  <FaImage className="w-4 h-4 text-gray-500" />
+                </div>
+                <input
+                  type="url"
+                  placeholder="https://example.com/image.png"
+                  value={tokenImageUrl}
+                  onChange={(e) => setTokenImageUrl(e.target.value)}
+                  className="w-full pl-10 pr-4 py-3 bg-white text-gray-800 placeholder-gray-400 rounded-xl border-2 border-gray-300 focus:border-gray-500 focus:outline-none transition-all duration-300 shadow-sm"
+                  disabled={isLoading}
+                />
               </div>
             </div>
 
@@ -240,12 +260,12 @@ const CreateToken = () => {
             <div className="grid grid-cols-2 gap-4">
               {/* Token Decimals Input */}
               <div>
-                <label className="block text-sm font-bold text-[#A5D7E8] mb-2">
+                <label className="block text-sm font-bold text-gray-700 mb-2">
                   Decimals (1-9)
                 </label>
                 <div className="relative">
                   <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                    <FaCog className="w-4 h-4 text-[#A5D7E8]/60" />
+                    <FaCog className="w-4 h-4 text-gray-500" />
                   </div>
                   <input
                     type="number"
@@ -259,7 +279,7 @@ const CreateToken = () => {
                         setTokenDecimals(value);
                       }
                     }}
-                    className="w-full pl-10 pr-4 py-3 bg-gradient-to-r from-[#19376D]/60 to-[#0B2447]/60 text-[#A5D7E8] placeholder-[#A5D7E8]/50 rounded-xl border-2 border-[#576CBC]/40 focus:border-[#A5D7E8]/60 focus:outline-none transition-all duration-300 shadow-lg"
+                    className="w-full pl-10 pr-4 py-3 bg-white text-gray-800 placeholder-gray-400 rounded-xl border-2 border-gray-300 focus:border-gray-500 focus:outline-none transition-all duration-300 shadow-sm"
                     disabled={isLoading}
                   />
                 </div>
@@ -267,19 +287,19 @@ const CreateToken = () => {
 
               {/* Token Supply Input */}
               <div>
-                <label className="block text-sm font-bold text-[#A5D7E8] mb-2">
+                <label className="block text-sm font-bold text-gray-700 mb-2">
                   Token Supply
                 </label>
                 <div className="relative">
                   <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                    <FaCoins className="w-4 h-4 text-[#A5D7E8]/60" />
+                    <FaCoins className="w-4 h-4 text-gray-500" />
                   </div>
                   <input
                     type="number"
                     placeholder="Enter supply"
                     value={tokenSupply}
                     onChange={(e) => setTokenSupply(Number(e.target.value))}
-                    className="w-full pl-10 pr-4 py-3 bg-gradient-to-r from-[#19376D]/60 to-[#0B2447]/60 text-[#A5D7E8] placeholder-[#A5D7E8]/50 rounded-xl border-2 border-[#576CBC]/40 focus:border-[#A5D7E8]/60 focus:outline-none transition-all duration-300 shadow-lg"
+                    className="w-full pl-10 pr-4 py-3 bg-white text-gray-800 placeholder-gray-400 rounded-xl border-2 border-gray-300 focus:border-gray-500 focus:outline-none transition-all duration-300 shadow-sm"
                     disabled={isLoading}
                   />
                 </div>
@@ -288,18 +308,18 @@ const CreateToken = () => {
 
             {/* Helper text for decimals */}
             <div className="text-center">
-              <p className="text-[#A5D7E8]/60 text-xs">
+              <p className="text-gray-500 text-xs">
                 Decimals must be between 1 and 9 (default: 9)
               </p>
             </div>
 
             {/* Success Message */}
             {success && (
-              <div className="bg-green-900/20 border border-green-500/50 rounded-xl p-4 backdrop-blur-sm">
+              <div className="bg-green-50 border border-green-200 rounded-xl p-4">
                 <div className="flex items-start">
-                  <FaCheckCircle className="w-5 h-5 text-green-400 mt-0.5 mr-3 flex-shrink-0" />
+                  <FaCheckCircle className="w-5 h-5 text-green-600 mt-0.5 mr-3 flex-shrink-0" />
                   <div className="flex-1">
-                    <p className="text-green-300 text-sm leading-relaxed">
+                    <p className="text-green-800 text-sm leading-relaxed">
                       {success}
                     </p>
                   </div>
@@ -309,11 +329,11 @@ const CreateToken = () => {
 
             {/* Error Message */}
             {error && (
-              <div className="bg-red-900/20 border border-red-500/50 rounded-xl p-4 backdrop-blur-sm">
+              <div className="bg-red-50 border border-red-200 rounded-xl p-4">
                 <div className="flex items-start">
-                  <FaExclamationTriangle className="w-5 h-5 text-red-400 mt-0.5 mr-3 flex-shrink-0" />
+                  <FaExclamationTriangle className="w-5 h-5 text-red-600 mt-0.5 mr-3 flex-shrink-0" />
                   <div className="flex-1">
-                    <p className="text-red-300 text-sm leading-relaxed">
+                    <p className="text-red-800 text-sm leading-relaxed">
                       {error}
                     </p>
                   </div>
@@ -337,8 +357,8 @@ const CreateToken = () => {
                 tokenDecimals < 1 ||
                 tokenDecimals > 9 ||
                 tokenSupply <= 0
-                  ? "bg-gradient-to-r from-[#19376D]/50 to-[#0B2447]/50 text-[#A5D7E8]/50 cursor-not-allowed scale-95"
-                  : "bg-gradient-to-r from-[#576CBC] to-[#A5D7E8] hover:from-[#576CBC]/90 hover:to-[#A5D7E8]/90 text-white shadow-2xl hover:shadow-3xl hover:scale-105 active:scale-95"
+                  ? "bg-gray-300 text-gray-500 cursor-not-allowed scale-95"
+                  : "bg-gray-600 hover:bg-gray-700 text-white shadow-lg hover:shadow-xl hover:scale-105 active:scale-95"
               }`}
             >
               {isLoading ? (
@@ -353,14 +373,14 @@ const CreateToken = () => {
                 </div>
               )}
               {!isLoading && wallet.connected && (
-                <div className="absolute inset-0 bg-gradient-to-r from-white/0 via-white/10 to-white/0 transform -skew-x-12 -translate-x-full group-hover:translate-x-full transition-transform duration-700"></div>
+                <div className="absolute inset-0 bg-gradient-to-r from-white/0 via-white/20 to-white/0 transform -skew-x-12 -translate-x-full group-hover:translate-x-full transition-transform duration-700"></div>
               )}
             </button>
 
             {/* Helper Text */}
             {!isLoading && (
               <div className="text-center">
-                <p className="text-[#A5D7E8]/60 text-sm leading-relaxed">
+                <p className="text-gray-600 text-sm leading-relaxed">
                   {!wallet.connected
                     ? "Connect your wallet to create a custom SPL token"
                     : tokenDecimals < 1 || tokenDecimals > 9 || tokenSupply <= 0
@@ -372,14 +392,14 @@ const CreateToken = () => {
           </div>
 
           {/* Footer */}
-          <div className="mt-12 pt-8 border-t border-[#576CBC]/40 relative z-10">
+          <div className="mt-12 pt-8 border-t border-gray-200 relative z-10">
             <div className="text-center">
-              <p className="text-[#A5D7E8]/70 text-sm mb-3 font-medium">
+              <p className="text-gray-600 text-sm mb-3 font-medium">
                 Powered by Solana Network
               </p>
               <div className="flex items-center justify-center">
-                <div className="w-3 h-3 bg-gradient-to-r from-[#A5D7E8] to-[#576CBC] rounded-full mr-3 animate-pulse shadow-lg"></div>
-                <span className="text-[#A5D7E8] text-sm font-bold">
+                <div className="w-3 h-3 bg-gray-500 rounded-full mr-3 animate-pulse"></div>
+                <span className="text-gray-700 text-sm font-bold">
                   Devnet Active
                 </span>
               </div>

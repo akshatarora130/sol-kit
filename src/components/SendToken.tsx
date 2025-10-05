@@ -101,22 +101,16 @@ const SendToken = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-[#0B2447] via-[#19376D] to-[#0B2447] flex items-center justify-center p-4">
+    <div className="min-h-screen bg-white flex items-center justify-center p-4">
       <div className="w-full max-w-lg">
-        <div className="bg-gradient-to-br from-[#19376D]/90 to-[#0B2447]/90 backdrop-blur-2xl rounded-3xl shadow-2xl border border-[#576CBC]/40 p-8 relative overflow-hidden">
-          {/* Animated background elements */}
-          <div className="absolute top-0 right-0 w-32 h-32 bg-gradient-to-br from-[#A5D7E8]/10 to-[#576CBC]/10 rounded-full blur-3xl"></div>
-          <div className="absolute bottom-0 left-0 w-24 h-24 bg-gradient-to-tr from-[#576CBC]/10 to-[#A5D7E8]/10 rounded-full blur-2xl"></div>
-
+        <div className="bg-gray-50 rounded-3xl shadow-lg border border-gray-200 p-8 relative overflow-hidden">
           {/* Header */}
           <div className="text-center mb-4 relative z-10">
-            <div className="w-24 h-24 bg-gradient-to-r from-[#576CBC] to-[#A5D7E8] rounded-full mx-auto mb-6 flex items-center justify-center shadow-2xl ring-4 ring-[#576CBC]/20">
+            <div className="w-24 h-24 bg-gray-600 rounded-full mx-auto mb-6 flex items-center justify-center shadow-lg">
               <FaPaperPlane className="w-12 h-12 text-white" />
             </div>
-            <h1 className="text-4xl font-bold bg-gradient-to-r from-[#A5D7E8] to-[#576CBC] bg-clip-text text-transparent mb-3">
-              Send SOL
-            </h1>
-            <p className="text-[#A5D7E8]/80 text-base font-medium">
+            <h1 className="text-4xl font-bold text-gray-800 mb-3">Send SOL</h1>
+            <p className="text-gray-600 text-base font-medium">
               Transfer SOL to another wallet
             </p>
           </div>
@@ -124,19 +118,19 @@ const SendToken = () => {
           <div className="space-y-6 relative z-10">
             {/* Recipient Address Input */}
             <div>
-              <label className="block text-lg font-bold text-[#A5D7E8] mb-4">
+              <label className="block text-lg font-bold text-gray-700 mb-4">
                 Recipient Address
               </label>
               <div className="relative">
                 <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
-                  <FaWallet className="w-5 h-5 text-[#A5D7E8]/60" />
+                  <FaWallet className="w-5 h-5 text-gray-500" />
                 </div>
                 <input
                   type="text"
                   placeholder="Enter recipient wallet address..."
                   value={recipientAddress}
                   onChange={(e) => setRecipientAddress(e.target.value)}
-                  className="w-full pl-12 pr-6 py-4 bg-gradient-to-r from-[#19376D]/60 to-[#0B2447]/60 text-[#A5D7E8] placeholder-[#A5D7E8]/50 rounded-2xl border-2 border-[#576CBC]/40 focus:border-[#A5D7E8]/60 focus:outline-none transition-all duration-300 shadow-lg"
+                  className="w-full pl-12 pr-6 py-4 bg-white text-gray-800 placeholder-gray-400 rounded-2xl border-2 border-gray-300 focus:border-gray-500 focus:outline-none transition-all duration-300 shadow-sm"
                   disabled={isSending}
                 />
               </div>
@@ -144,12 +138,12 @@ const SendToken = () => {
 
             {/* Amount Input */}
             <div>
-              <label className="block text-lg font-bold text-[#A5D7E8] mb-4">
+              <label className="block text-lg font-bold text-gray-700 mb-4">
                 Amount (SOL)
               </label>
               <div className="relative">
                 <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
-                  <span className="text-[#A5D7E8]/60 font-bold mr-2">SOL</span>
+                  <span className="text-gray-500 font-bold mr-2">SOL</span>
                 </div>
                 <input
                   type="number"
@@ -158,7 +152,7 @@ const SendToken = () => {
                   placeholder="0.0"
                   value={amount}
                   onChange={(e) => setAmount(e.target.value)}
-                  className="w-full pl-12 pr-6 py-4 bg-gradient-to-r from-[#19376D]/60 to-[#0B2447]/60 text-[#A5D7E8] placeholder-[#A5D7E8]/50 rounded-2xl border-2 border-[#576CBC]/40 focus:border-[#A5D7E8]/60 focus:outline-none transition-all duration-300 shadow-lg"
+                  className="w-full pl-12 pr-6 py-4 bg-white text-gray-800 placeholder-gray-400 rounded-2xl border-2 border-gray-300 focus:border-gray-500 focus:outline-none transition-all duration-300 shadow-sm"
                   disabled={isSending}
                 />
               </div>
@@ -170,8 +164,8 @@ const SendToken = () => {
               disabled={isSending || !recipientAddress.trim() || !amount}
               className={`w-full py-5 px-8 rounded-2xl font-bold text-xl transition-all duration-300 transform relative overflow-hidden group ${
                 isSending || !recipientAddress.trim() || !amount
-                  ? "bg-gradient-to-r from-[#19376D]/50 to-[#0B2447]/50 text-[#A5D7E8]/50 cursor-not-allowed scale-95"
-                  : "bg-gradient-to-r from-[#576CBC] to-[#A5D7E8] hover:from-[#576CBC]/90 hover:to-[#A5D7E8]/90 text-white shadow-2xl hover:shadow-3xl hover:scale-105 active:scale-95"
+                  ? "bg-gray-300 text-gray-500 cursor-not-allowed scale-95"
+                  : "bg-gray-600 hover:bg-gray-700 text-white shadow-lg hover:shadow-xl hover:scale-105 active:scale-95"
               }`}
             >
               {isSending ? (
